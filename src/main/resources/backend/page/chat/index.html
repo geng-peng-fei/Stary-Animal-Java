@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../plugins/element-ui/index.css"/>
+    <style>
+        .el-divider {
+            width: 750px;
+            margin: 20px 0 20px -10px;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container" id="chat" v-loading="loading">
+    <el-card>
+        <el-card class="box-card" style="width: 30%;display: inline-block;height: 800px">
+            <div slot="header" class="clearfix" style="text-align: center">
+                <span>用 户( <span>{{ onlineCount }}</span> )</span>
+            </div>
+            <div>
+                <div v-for="(user, index) in onlineList" :key="index">
+
+                </div>
+            </div>
+        </el-card>
+        <el-card class="box-card" style="width: 60%;display: inline-block;height: 800px">
+            <div slot="header" class="clearfix" style="text-align: center;">
+                <span>{{ userNickName }}</span>
+
+            </div>
+            <div style="height: 610px;">
+                <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+            </div>
+            <el-divider></el-divider>
+            <div>
+                <el-input placeholder="请输入内容"
+                          clearable
+                          v-model="sentText" style="width: 85%; margin-right: 20px">
+                </el-input>
+                <el-button type="primary" @click="sendMsg">发送</el-button>
+            </div>
+        </el-card>
+    </el-card>
+    <div>
+        <input v-model="to" placeholder="to...">
+        <input v-model="gotText" placeholder="waiting..."></input>
+    </div>
+</div>
+
+<script src="../../plugins/vue/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="../../plugins/element-ui/index.js"></script>
+<!-- 引入axios -->
+<script src="../../plugins/axios/axios.min.js"></script>
+<script src="../../js/request.js"></script>
+<script>
+    new Vue({
+        el: '#chat',
+        data() {
+            return {
+                userId: '',
+                userNickName: '123',
+                sentText: '',
+                gotText: '',
+                socket: '',
+                onlineCount: 0,
+                onlineList: [],
+                from: '',
+                to: '',
+                loading: false
+            }
+        },
+        created() {
+            this.initWebSocket()
+        },
+        updated() {
+            //    每次发送消息到最后
+            var end = document.getElementById("msg_end")
+            end.scrollTop = end.scrollHeight
+        },
+        destroyed: function () {
+            this.webSocketClose()
+        },
+        methods: {
+            initWebSocket: function (userId, sessionId) {
+                // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
+                this.websock = new WebSocket("ws://127.0.0.1:1997/websocket/" + userId + "/" + sessionId);
+                this.websock.onopen = this.webSocketOnopen;
+                this.websock.onerror = this.webSocketOnerror;
+                this.websock.onmessage = this.webSocketOnmessage;
+                this.websock.onclose = this.webSocketClose;
+            },
+            webSocketOnopen: function () {
+                console.log("WebSocket连接成功");
+            },
+            webSocketOnerror: function (e) {
+                console.log("WebSocket连接发生错误", e);
+            },
+            webSocketOnmessage: function (e) {
+                console.log("获取到后端传递来的数据", e.data);
+            },
+            webSocketClose: function (e) {
+                console.log("WebSocket连接关闭", e);
+            },
+        }
+    })
+</script>
+</body>
+</html>
