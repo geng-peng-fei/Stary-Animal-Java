@@ -61,7 +61,7 @@
                     <span>{{headTitle}}</span>
                 </div>
                 <div class="right-menu">
-                    <div class="avatar-wrapper">{{ userInfo.name }}</div>
+                    <div class="avatar-wrapper">{{ admin.name }}</div>
                     <!--                    <div class="logout" @click="logout">退出</div>-->
                     <img src="images/icons/btn_close@2x.png" class="outLogin" alt="退出" @click="logout"/>
                 </div>
@@ -91,7 +91,7 @@
             return {
                 defAct: '2',
                 menuActived: '1',
-                userInfo: {},
+                admin: {},
                 menuList: [
                     // {
                     //     id: '1',
@@ -125,7 +125,7 @@
                         id: '8',
                         name: '活动管理',
                         url: 'page/active/list.html',
-                    },{
+                    }, {
                         id: '9',
                         name: '聊天',
                         url: 'page/chat/index.html',
@@ -143,9 +143,9 @@
         },
         computed: {},
         created() {
-            const userInfo = window.localStorage.getItem('userInfo')
-            if (userInfo) {
-                this.userInfo = JSON.parse(userInfo)
+            const admin = window.localStorage.getItem('admin')
+            if (admin) {
+                this.admin = JSON.parse(admin)
             }
             this.closeLoading()
         },
@@ -160,7 +160,7 @@
             logout() {
                 logoutApi().then((res) => {
                     if (res.success === true) {
-                        localStorage.removeItem('userInfo')
+                        localStorage.removeItem('admin')
                         window.location.href = '/backend/page/login/login.html'
                     }
                 })

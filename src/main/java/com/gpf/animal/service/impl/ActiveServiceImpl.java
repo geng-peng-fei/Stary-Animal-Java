@@ -144,7 +144,7 @@ public class ActiveServiceImpl extends ServiceImpl<ActiveDao, Active> implements
         List<Active> actives;
         if (activeList.size() <= 4) {
             return Result.ok(activeList);
-        }else {
+        } else {
             actives = activeList.subList(0, activeList.size() - 1);
         }
         return Result.ok(actives);

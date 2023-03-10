@@ -65,12 +65,15 @@ public interface UserService extends IService<User> {
 
     /**
      * 修改用户账号状态
+     *
      * @param user
      * @return
      */
     Result updateUserStatus(User user);
+
     /**
      * 查询用户信息
+     *
      * @param id
      * @return
      */

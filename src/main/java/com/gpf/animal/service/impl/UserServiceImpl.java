@@ -152,6 +152,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 修改用户账号状态
+     *
      * @param user
      * @return
      */
@@ -160,8 +161,10 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         updateUser(user);
         return Result.ok("修改成功");
     }
+
     /**
      * 查询用户信息
+     *
      * @param id
      * @return
      */
@@ -170,7 +173,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         User user;
         try {
             user = getById(id);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return Result.fail("查询用户信息失败");
         }
         return Result.ok(user);

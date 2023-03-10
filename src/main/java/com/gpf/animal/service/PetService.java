@@ -57,6 +57,7 @@ public interface PetService extends IService<Pet> {
 
     /**
      * 前端获得宠物列表
+     *
      * @param requestParams
      * @return
      */
@@ -64,6 +65,7 @@ public interface PetService extends IService<Pet> {
 
     /**
      * 前端主页获得宠物列表
+     *
      * @return
      */
     Result getPetList();

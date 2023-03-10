@@ -89,31 +89,34 @@ public class ActiveController {
 
     /**
      * 前端获得活动列表
+     *
      * @param requestParams
      * @return
      */
     @PostMapping("/list")
-    public Result getActiveList(@RequestBody RequestParams requestParams){
+    public Result getActiveList(@RequestBody RequestParams requestParams) {
         return activeService.getActiveList(requestParams);
     }
 
     /**
      * 前端主页获得活动列表
+     *
      * @return
      */
     @PostMapping("/listWu")
-    public Result getActiveList(){
+    public Result getActiveList() {
         return activeService.getActiveList();
     }
 
     /**
-     *  用户加入活动
+     * 用户加入活动
+     *
      * @param activeId
      * @param userId
      * @return
      */
     @PostMapping("/join")
-    public Result join(int activeId, int userId){
+    public Result join(int activeId, int userId) {
         return activeService.joinActive(activeId, userId);
     }
 }

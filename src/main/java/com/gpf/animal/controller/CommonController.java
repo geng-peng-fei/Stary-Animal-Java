@@ -63,8 +63,8 @@ public class CommonController {
     }
 
     /**
-     *
      * 文件下载
+     *
      * @param name
      * @param response
      * @param type
@@ -72,7 +72,7 @@ public class CommonController {
     @GetMapping("/download/{type}")
     public void download(@RequestParam String name, HttpServletResponse response, @PathVariable String type) {
         imagePath(type);
-        try{
+        try {
             //输入流，通过输入流读取文件内容
             FileInputStream fileInputStream = new FileInputStream(basePath + name);
             //输出流，通过输出流将文件写回浏览器     图片回显
@@ -101,7 +101,7 @@ public class CommonController {
      */
     @GetMapping("/download")
     public void download(@RequestParam String name, HttpServletResponse response) {
-        try{
+        try {
             //输入流，通过输入流读取文件内容
             FileInputStream fileInputStream = new FileInputStream(basePath + name);
             //输出流，通过输出流将文件写回浏览器     图片回显
@@ -121,15 +121,20 @@ public class CommonController {
             e.printStackTrace();
         }
     }
+
     private void imagePath(String type) {
         switch (type) {
-            case "user": basePath = userPath;
+            case "user":
+                basePath = userPath;
                 break;
-            case "pet": basePath = petPath;
+            case "pet":
+                basePath = petPath;
                 break;
-            case "active": basePath = activePath;
+            case "active":
+                basePath = activePath;
                 break;
-            default: throw new RuntimeException("Unknown type");
+            default:
+                throw new RuntimeException("Unknown type");
         }
     }
 }

@@ -23,6 +23,7 @@ public interface VarietiesService extends IService<Varieties> {
 
     /**
      * 获得类型列表(带品种)
+     *
      * @param varieties
      * @return
      */
@@ -63,6 +64,7 @@ public interface VarietiesService extends IService<Varieties> {
 
     /**
      * 前端获取过滤项
+     *
      * @param requestParams
      * @return
      */

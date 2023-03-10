@@ -58,23 +58,26 @@ public class UserController {
 
     /**
      * 修改用户账号状态
+     *
      * @param user
      * @return
      */
     @PutMapping
-    public Result updateUserStatus(@RequestBody User user){
+    public Result updateUserStatus(@RequestBody User user) {
         return userService.updateUserStatus(user);
     }
 
     /**
      * 查询用户信息
+     *
      * @param id
      * @return
      */
     @GetMapping("/{id}")
-    public Result getUserById(@PathVariable Long id){
+    public Result getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
+
     /**
      * 用户中心
      *

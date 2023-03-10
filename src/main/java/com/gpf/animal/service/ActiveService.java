@@ -71,8 +71,10 @@ public interface ActiveService extends IService<Active> {
      * @return
      */
     Result getActiveList();
+
     /**
-     *  用户加入活动
+     * 用户加入活动
+     *
      * @param activeId
      * @param userId
      * @return

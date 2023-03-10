@@ -24,7 +24,7 @@
         <div class="login-form">
             <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
                 <div class="login-form-title">
-<!--                    <img src="../../images/login/" style="width:139px;height:42px;" alt=""/>-->
+                    <!--                    <img src="../../images/login/" style="width:139px;height:42px;" alt=""/>-->
                     <p>流浪动物救助平台管理端</p>
                 </div>
                 <el-form-item prop="username">
@@ -101,7 +101,7 @@
                         let res = await loginApi(this.loginForm)
                         if (res.success === true) {
                             //数据缓存在浏览器中        键            值
-                            localStorage.setItem('userInfo', JSON.stringify(res.data))
+                            localStorage.setItem('admin', JSON.stringify(res.data))
                             window.location.href = '/backend/index.html'
                         } else {
                             this.$message.error(res.msg)

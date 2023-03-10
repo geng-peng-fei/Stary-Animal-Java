@@ -43,9 +43,6 @@ const queryPetVarietiesById = (id) => {
 }
 
 
-
-
-
 // 文件down预览
 const commonDownload = (params) => {
     return $axios({

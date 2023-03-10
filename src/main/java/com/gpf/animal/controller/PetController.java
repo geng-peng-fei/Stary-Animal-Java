@@ -32,14 +32,15 @@ public class PetController {
      * 查询宠物列表
      */
     @PostMapping("/list")
-    public Result getPetList(@RequestBody RequestParams requestParams){
+    public Result getPetList(@RequestBody RequestParams requestParams) {
         return petService.getPetList(requestParams);
     }
+
     /**
      * 查询宠物分页
      */
     @GetMapping("/page")
-    public Result getPetPage(Integer page, Integer pageSize, String name){
+    public Result getPetPage(Integer page, Integer pageSize, String name) {
         return petService.getPetPage(page, pageSize, name);
     }
 
@@ -96,10 +97,11 @@ public class PetController {
 
     /**
      * 前端主页获得宠物列表
+     *
      * @return
      */
     @PostMapping("/listWu")
-    public Result getPetList(){
+    public Result getPetList() {
         return petService.getPetList();
     }
 }

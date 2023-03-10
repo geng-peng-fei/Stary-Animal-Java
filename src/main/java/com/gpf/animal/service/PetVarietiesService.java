@@ -19,6 +19,7 @@ public interface PetVarietiesService extends IService<PetVarieties> {
 
     /**
      * 删除宠物种类 宠物种类有宠物的不能删除
+     *
      * @param id
      */
     Result deletePetVarieties(Long id);
@@ -35,6 +36,7 @@ public interface PetVarietiesService extends IService<PetVarieties> {
 
     /**
      * 获得品种列表
+     *
      * @param varietiesId
      */
     Result getPetVarietiesList(Long varietiesId);

@@ -20,7 +20,7 @@ class AnimalApplicationTests {
 
 
     @Test
-    void webSocket(){
-        
+    void webSocket() {
+
     }
 }

@@ -113,15 +113,15 @@
                     this.classData.title = '新增宠物分类'
                 }
                 this.action = 'add'
-                    this.classData.name = ''
-                    this.classData.dialogVisible = true
+                this.classData.name = ''
+                this.classData.dialogVisible = true
             },
             editHandle(dat) {
                 this.classData.title = '修改分类'
                 this.action = 'edit'
-                    this.classData.name = dat.name
-                    this.classData.id = dat.id
-                    this.classData.dialogVisible = true
+                this.classData.name = dat.name
+                this.classData.id = dat.id
+                this.classData.dialogVisible = true
             },
             // 关闭弹窗
             handleClose(st) {

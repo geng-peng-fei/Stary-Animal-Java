@@ -15,6 +15,7 @@ import java.util.List;
 public interface AdoptService extends IService<Adopt> {
     /**
      * 新增领养申请
+     *
      * @param adopt
      * @return
      */
@@ -30,6 +31,7 @@ public interface AdoptService extends IService<Adopt> {
 
     /**
      * 删除领养申请
+     *
      * @param id
      * @return
      */

@@ -9,43 +9,62 @@
             width: 750px;
             margin: 20px 0 20px -10px;
         }
+
+        .tip {
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+            font-family: sans-serif;
+            padding: 10px;
+            width: auto;
+            display: inline-block !important;
+            display: inline;
+        }
+
+        .right {
+            background-color: deepskyblue;
+        }
+
+        .left {
+            background-color: forestgreen;
+        }
     </style>
 </head>
 <body>
-<div class="dashboard-container" id="chat" v-loading="loading">
+<div class="dashboard-container" id="chat">
     <el-card>
         <el-card class="box-card" style="width: 30%;display: inline-block;height: 800px">
             <div slot="header" class="clearfix" style="text-align: center">
-                <span>用 户( <span>{{ onlineCount }}</span> )</span>
+                <span>用 户 列 表</span>
             </div>
             <div>
-                <div v-for="(user, index) in onlineList" :key="index">
-
+                <div style="padding: 10px 0" v-for="admin in admins" :key="admin.adminName">
+                    <span>{{ admin.adminName }}</span>
+                    <i class="el-icon-chat-dot-round"
+                       style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                       @click="chatAdmin = admin.adminName"></i>
                 </div>
             </div>
         </el-card>
         <el-card class="box-card" style="width: 60%;display: inline-block;height: 800px">
             <div slot="header" class="clearfix" style="text-align: center;">
-                <span>{{ userNickName }}</span>
-
+                <span>当前用户：{{ chatAdmin }}</span>
             </div>
-            <div style="height: 610px;">
-                <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+            <div v-html="content" style="height: 610px;">
+
             </div>
             <el-divider></el-divider>
             <div>
                 <el-input placeholder="请输入内容"
                           clearable
-                          v-model="sentText" style="width: 85%; margin-right: 20px">
+                          v-model="text"
+                          @keyup.enter.native="send"
+                          style="width: 85%; margin-right: 20px">
                 </el-input>
-                <el-button type="primary" @click="sendMsg">发送</el-button>
+                <el-button type="primary" @click="send">发送</el-button>
             </div>
         </el-card>
     </el-card>
-    <div>
-        <input v-model="to" placeholder="to...">
-        <input v-model="gotText" placeholder="waiting..."></input>
-    </div>
 </div>
 
 <script src="../../plugins/vue/vue.js"></script>
@@ -55,54 +74,128 @@
 <script src="../../plugins/axios/axios.min.js"></script>
 <script src="../../js/request.js"></script>
 <script>
+    let socket;
     new Vue({
         el: '#chat',
         data() {
             return {
-                userId: '',
-                userNickName: '123',
-                sentText: '',
-                gotText: '',
-                socket: '',
-                onlineCount: 0,
-                onlineList: [],
-                from: '',
-                to: '',
-                loading: false
+                admin: {},
+                isCollapse: false,
+                admins: [],
+                chatAdmin: '',
+                text: "",
+                messages: [],
+                content: ''
             }
         },
         created() {
-            this.initWebSocket()
-        },
-        updated() {
-            //    每次发送消息到最后
-            var end = document.getElementById("msg_end")
-            end.scrollTop = end.scrollHeight
-        },
-        destroyed: function () {
-            this.webSocketClose()
+            this.init()
         },
         methods: {
-            initWebSocket: function (userId, sessionId) {
-                // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
-                this.websock = new WebSocket("ws://127.0.0.1:1997/websocket/" + userId + "/" + sessionId);
-                this.websock.onopen = this.webSocketOnopen;
-                this.websock.onerror = this.webSocketOnerror;
-                this.websock.onmessage = this.webSocketOnmessage;
-                this.websock.onclose = this.webSocketClose;
+            send() {
+                if (!this.chatAdmin) {
+                    this.$message({type: 'warning', message: "请选择聊天对象"})
+                    return;
+                }
+                if (!this.text) {
+                    this.$message({type: 'warning', message: "请输入内容"})
+                } else {
+                    if (typeof (WebSocket) == "undefined") {
+                        console.log("您的浏览器不支持WebSocket");
+                    } else {
+                        console.log("您的浏览器支持WebSocket");
+                        // 组装待发送的消息 json
+                        // {"from": "zhang", "to": "admin", "text": "聊天文本"}
+                        const fromAdmin = this.admin.adminName;
+                        const toAdmin = this.chatAdmin;
+
+                        let message = {from: fromAdmin, to: toAdmin, text: this.text}
+                        socket.send(JSON.stringify(message));  // 将组装好的json发送给服务端，由服务端进行转发
+                        this.messages.push({user: fromAdmin, text: this.text})
+                        // 构建消息内容，本人消息
+                        this.createContent(null, fromAdmin, this.text)
+                        this.text = '';
+                    }
+                }
             },
-            webSocketOnopen: function () {
-                console.log("WebSocket连接成功");
+            createContent(remoteAdmin, nowAdmin, text) {
+                // 这个方法是用来将 json的聊天消息数据转换成 html的。
+                let html
+                // 当前用户消息
+                if (nowAdmin) {
+                    // nowUser 表示是否显示当前用户发送的聊天消息，绿色气泡
+                    html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
+                        "  <div class=\"el-col el-col-22\" style=\"text-align: right; padding-right: 10px\">\n" +
+                        "    <div class=\"tip left\">" + text + "</div>\n" +
+                        "  </div>\n" +
+                        "  <div class=\"el-col el-col-2\">\n" +
+                        "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
+                        "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
+                        "  </span>\n" +
+                        "  </div>\n" +
+                        "</div>";
+                } else if (remoteAdmin) {
+                    // remoteUser表示远程用户聊天消息，蓝色的气泡
+                    html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
+                        "  <div class=\"el-col el-col-2\" style=\"text-align: right\">\n" +
+                        "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
+                        "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
+                        "  </span>\n" +
+                        "  </div>\n" +
+                        "  <div class=\"el-col el-col-22\" style=\"text-align: left; padding-left: 10px\">\n" +
+                        "    <div class=\"tip right\">" + text + "</div>\n" +
+                        "  </div>\n" +
+                        "</div>";
+                }
+                console.log(html)
+                this.content += html;
             },
-            webSocketOnerror: function (e) {
-                console.log("WebSocket连接发生错误", e);
-            },
-            webSocketOnmessage: function (e) {
-                console.log("获取到后端传递来的数据", e.data);
-            },
-            webSocketClose: function (e) {
-                console.log("WebSocket连接关闭", e);
-            },
+            init() {
+                this.admin = localStorage.getItem("admin") ? JSON.parse(localStorage.getItem("admin")) : {}
+                let adminName = this.admin.name;
+                let _this = this;
+                if (typeof (WebSocket) == "undefined") {
+                    console.log("您的浏览器不支持WebSocket");
+                } else {
+                    console.log("您的浏览器支持WebSocket");
+                    let socketUrl = "ws://localhost:8081/chat/" + adminName;
+                    if (socket != null) {
+                        socket.close();
+                        socket = null;
+                    }
+                    // 开启一个websocket服务
+                    socket = new WebSocket(socketUrl);
+                    //打开事件
+                    socket.onopen = function () {
+                        console.log("websocket已打开");
+                    };
+                    //  浏览器端收消息，获得从服务端发送过来的文本消息
+                    socket.onmessage = function (msg) {
+                        console.log("收到数据====" + msg.data)
+                        let data = JSON.parse(msg.data)
+                        // 对收到的json数据进行解析， 类似这样的： {"users": [{"username": "zhang"},{ "username": "admin"}]}
+                        if (data.admins) {  // 获取在线人员信息
+                            _this.admins = data.admins.filter(admin => admin.adminName !== adminName)  // 获取当前连接的所有用户信息，并且排除自身，自己不会出现在自己的聊天列表里
+                        } else {
+                            // 如果服务器端发送过来的json数据 不包含 users 这个key，那么发送过来的就是聊天文本json数据
+                            // {"from": "zhang", "text": "hello"}
+                            if (data.from === _this.chatAdmin) {
+                                _this.messages.push(data)
+                                // 构建消息内容
+                                _this.createContent(data.from, null, data.text)
+                            }
+                        }
+                    };
+                    //关闭事件
+                    socket.onclose = function () {
+                        console.log("websocket已关闭");
+                    };
+                    //发生了错误事件
+                    socket.onerror = function () {
+                        console.log("websocket发生了错误");
+                    }
+                }
+            }
         }
     })
 </script>

@@ -152,7 +152,7 @@ public class VarietiesServiceImpl extends ServiceImpl<VarietiesDao, Varieties> i
         // varieties不为空
         if (varietiesName != null) {
             LambdaQueryWrapper<PetVarieties> wrapper = new LambdaQueryWrapper<>();
-            wrapper.eq(PetVarieties::getVarietiesName,varietiesName);
+            wrapper.eq(PetVarieties::getVarietiesName, varietiesName);
             List<PetVarieties> petVarietiesList = petVarietiesService.list(wrapper);
             List<String> list = new ArrayList<>(petVarietiesList.size());
             for (PetVarieties petVarieties : petVarietiesList) {

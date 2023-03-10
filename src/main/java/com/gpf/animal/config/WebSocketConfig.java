@@ -14,9 +14,11 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 @Configuration
 public class WebSocketConfig {
 
-    /**  注入ServerEndpointExporter bean对象 自动注册使用了@ServerEndpoint注解的bean对象 */
+    /**
+     * 注入ServerEndpointExporter bean对象 自动注册使用了@ServerEndpoint注解的bean对象
+     */
     @Bean
-    public ServerEndpointExporter serverEndpointExporter(){
+    public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();
     }
 }

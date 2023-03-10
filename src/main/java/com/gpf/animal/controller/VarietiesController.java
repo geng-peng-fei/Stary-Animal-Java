@@ -91,10 +91,13 @@ public class VarietiesController {
 
     /**
      * 前端获取过滤项
+     *
      * @param requestParams
      * @return
      */
     @PostMapping("/filters")
-    public Result varietiesFilter(@RequestBody RequestParams requestParams){return varietiesService.getVarietiesFilter(requestParams);}
+    public Result varietiesFilter(@RequestBody RequestParams requestParams) {
+        return varietiesService.getVarietiesFilter(requestParams);
+    }
 }
 

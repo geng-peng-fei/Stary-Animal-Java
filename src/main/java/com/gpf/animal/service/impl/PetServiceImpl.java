@@ -128,6 +128,7 @@ public class PetServiceImpl extends ServiceImpl<PetDao, Pet> implements PetServi
 
     /**
      * 新增宠物
+     *
      * @param pet
      * @return
      */
@@ -151,7 +152,7 @@ public class PetServiceImpl extends ServiceImpl<PetDao, Pet> implements PetServi
         //排序条件
         wrapper.orderByDesc(Pet::getId);
         List<Pet> petList = list(wrapper);
-        if (petList.size() <= 4){
+        if (petList.size() <= 4) {
             return Result.ok(petList);
         }
         List<Pet> pets = petList.subList(0, petList.size() - 1);

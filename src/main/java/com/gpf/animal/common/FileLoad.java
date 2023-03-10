@@ -17,6 +17,7 @@ import java.util.UUID;
 public class FileLoad {
     /**
      * 用户图片上传到用户文件夹下
+     *
      * @param file
      * @return
      */
@@ -33,8 +34,10 @@ public class FileLoad {
         }
         return picName + substring;
     }
+
     /**
      * 宠物图片上传到宠物文件夹下
+     *
      * @param file
      * @return
      */
@@ -54,6 +57,7 @@ public class FileLoad {
 
     /**
      * 活动图片上传到活动文件夹下
+     *
      * @param file
      * @return
      */
