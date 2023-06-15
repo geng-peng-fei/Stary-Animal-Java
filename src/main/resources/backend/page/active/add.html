@@ -19,12 +19,6 @@
                 <el-form-item label="活动名称:" prop="name">
                     <el-input v-model="ruleForm.name" placeholder="请填写活动名称" maxlength="20"></el-input>
                 </el-form-item>
-                <!--                <el-form-item label="活动成员:" prop="member">-->
-                <!--                    <el-select v-model="ruleForm.idType" placeholder="请选择活动成员" @change="$forceUpdate()">-->
-                <!--                        <el-option v-for="(item, index) in memberList" :key="index" :label="item.name"-->
-                <!--                                   :value="item.id"></el-option>-->
-                <!--                    </el-select>-->
-                <!--                </el-form-item>-->
                 <el-form-item label="活动地址:" prop="address">
                     <el-input v-model="ruleForm.address" placeholder="请填写活动地址"></el-input>
                 </el-form-item>
@@ -45,7 +39,7 @@
             </div>
             <div>
                 <el-form-item label="活动图片:" class="uploadImg">
-                    <el-upload class="avatar-uploader" action="/common/upload"
+                    <el-upload class="avatar-uploader" action="/common/upload/active"
                                :show-file-list="false" :on-success="handleAvatarSuccess"
                                :on-change="onChange" ref="upload">
                         <img v-if="imageUrl" :src="imageUrl" class="avatar"/>

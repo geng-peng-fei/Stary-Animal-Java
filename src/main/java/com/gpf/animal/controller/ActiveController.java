@@ -1,5 +1,6 @@
 package com.gpf.animal.controller;
 
+import com.gpf.animal.common.PageVO;
 import com.gpf.animal.common.Result;
 import com.gpf.animal.dto.RequestParams;
 import com.gpf.animal.entity.Active;
@@ -77,13 +78,13 @@ public class ActiveController {
     /**
      * 查询活动列表
      *
-     * @param page
-     * @param pageSize
-     * @param name
      * @return
      */
-    @GetMapping("/page")
-    public Result getActivePage(int page, int pageSize, String name) {
+    @PostMapping("/page")
+    public Result getActivePage(@RequestBody PageVO pageVO) {
+        Integer page = pageVO.getPage();
+        Integer pageSize = pageVO.getPageSize();
+        String name = pageVO.getName();
         return activeService.getActivePage(page, pageSize, name);
     }
 
@@ -119,5 +120,17 @@ public class ActiveController {
     public Result join(int activeId, int userId) {
         return activeService.joinActive(activeId, userId);
     }
+
+    /**
+     * echart数据
+     * @return
+     */
+    @GetMapping("/echart")
+    public Result getActiveEchartData(){
+        return activeService.getActiveEchartData();
+    }
+
 }
+
+
 

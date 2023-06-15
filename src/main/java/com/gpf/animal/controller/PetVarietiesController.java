@@ -3,6 +3,7 @@ package com.gpf.animal.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gpf.animal.common.PageVO;
 import com.gpf.animal.common.Result;
 import com.gpf.animal.dto.RequestParams;
 import com.gpf.animal.entity.PetVarieties;
@@ -32,8 +33,12 @@ public class PetVarietiesController {
     /**
      * 种类列表 分页
      */
-    @GetMapping("/page")
-    public Result petVarietiesPage(int page, int pageSize, String name, String petVarieties) {
+    @PostMapping("/page")
+    public Result petVarietiesPage(@RequestBody PageVO pageVO) {
+        Integer page = pageVO.getPage();
+        Integer pageSize = pageVO.getPageSize();
+        String name = pageVO.getName();
+        String petVarieties = pageVO.getPetVarieties();
         return petVarietiesService.PetVarietiesPage(page, pageSize, name, petVarieties);
     }
 
@@ -79,6 +84,15 @@ public class PetVarietiesController {
         return petVarietiesService.getPetVarietiesList(varietiesId);
     }
 
+    /**
+     * 根据类型名称获取品种
+     * @param varieties
+     * @return
+     */
+    @GetMapping("/echart")
+    public Result getPetVarietiesEchartData(@RequestParam(value = "varieties") String varieties){
+        return petVarietiesService.getPetVarietiesEchartData(varieties);
+    }
 //    /**
 //     * 获取varieties下的petVarieties
 //     * @param requestParams

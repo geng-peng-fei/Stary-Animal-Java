@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -37,7 +39,7 @@ public class PetVarietiesServiceImpl extends ServiceImpl<PetVarietiesDao, PetVar
      */
     @Override
     public Result PetVarietiesPage(int page, int pageSize, String name, String petVarieties) {
-        Page<PetVarieties> petVarietiesPage = new Page<>();
+        Page<PetVarieties> petVarietiesPage = new Page<>(page, pageSize);
         LambdaQueryWrapper<PetVarieties> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(name != null, PetVarieties::getName, name);
         wrapper.like(petVarieties != null, PetVarieties::getVarietiesName, petVarieties);
@@ -112,7 +114,41 @@ public class PetVarietiesServiceImpl extends ServiceImpl<PetVarietiesDao, PetVar
         return Result.fail("varietiesId为空");
     }
 
-//    /**
+
+    /**
+     * 根据类型名称获取品种
+     *
+     * @param varieties
+     * @return
+     */
+    @Override
+    public Result getPetVarietiesEchartData(String varieties) {
+        HashMap<String, List> echartData = new HashMap<>();
+        ArrayList<String> labels = new ArrayList<>();
+        ArrayList<Integer> values = new ArrayList<>();
+
+        LambdaQueryWrapper<PetVarieties> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(varieties != null, PetVarieties::getVarietiesName, varieties);
+        List<PetVarieties> list = list(wrapper);
+        for (PetVarieties petVarieties : list) {
+            String petVarietiesName = petVarieties.getName();
+            if (!"".equals(petVarietiesName)) {
+                labels.add(petVarietiesName);
+
+                LambdaQueryWrapper<Pet> petWrapper = new LambdaQueryWrapper<>();
+                petWrapper.eq(Pet::getPetVarietiesName, petVarietiesName);
+                List<Pet> pets = petService.list(petWrapper);
+                values.add(pets.size());
+            }
+
+        }
+        echartData.put("labels", labels);
+        echartData.put("values", values);
+        return Result.ok(echartData);
+    }
+
+
+    //    /**
 //     * 获取varieties下的petVarieties
 //     * @param requestParams
 //     * @return

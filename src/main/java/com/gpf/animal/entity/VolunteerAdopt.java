@@ -11,6 +11,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * (Volunteer)表实体类
@@ -19,19 +20,13 @@ import java.time.LocalDateTime;
  * @since 2022-11-10 09:14:04
  */
 @Data
-public class Volunteer implements Serializable {
+public class VolunteerAdopt implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     private Long userId;
     private String description;
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
-    private String createTime;
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
-    private String updateTime;
-    @TableField(value = "assessor", fill = FieldFill.INSERT_UPDATE)
-    private Long updateUser;
-    @TableField(value = "audit_time", fill = FieldFill.INSERT_UPDATE)
-    private String auditTime;
+    @TableField(value = "create_time")
+    private Date createTime;
     private Integer status;
 
     @TableField(exist = false)

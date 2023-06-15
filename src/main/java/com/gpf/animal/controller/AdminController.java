@@ -1,6 +1,7 @@
 package com.gpf.animal.controller;
 
 
+import com.gpf.animal.common.PageVO;
 import com.gpf.animal.common.Result;
 import com.gpf.animal.entity.Admin;
 import com.gpf.animal.service.AdminService;
@@ -63,13 +64,13 @@ public class AdminController {
     /**
      * 分页查询
      *
-     * @param page
-     * @param pageSize
-     * @param name
      * @return
      */
-    @GetMapping("/page")
-    public Result adminPage(int page, int pageSize, String name) {
+    @PostMapping("/page")
+    public Result adminPage(@RequestBody  PageVO pageVO) {
+        Integer page = pageVO.getPage();
+        Integer pageSize = pageVO.getPageSize();
+        String name = pageVO.getName();
         return adminService.adminPage(page, pageSize, name);
     }
 

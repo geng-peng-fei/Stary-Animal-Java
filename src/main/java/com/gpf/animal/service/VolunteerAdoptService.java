@@ -2,7 +2,7 @@ package com.gpf.animal.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gpf.animal.common.Result;
-import com.gpf.animal.entity.Volunteer;
+import com.gpf.animal.entity.VolunteerAdopt;
 
 import java.util.List;
 
@@ -12,18 +12,18 @@ import java.util.List;
  * @author makejava
  * @since 2022-11-10 09:14:04
  */
-public interface VolunteerService extends IService<Volunteer> {
+public interface VolunteerAdoptService extends IService<VolunteerAdopt> {
     /**
      * 新增申请
      */
-    Result insertVolunteer(Volunteer volunteer);
+    Result insertVolunteer(VolunteerAdopt volunteer);
 
     /**
      * 修改申请
      *
      * @param volunteer
      */
-    Result updateVolunteer(Volunteer volunteer);
+    Result updateVolunteer(VolunteerAdopt volunteer);
 
     /**
      * 查询申请
@@ -33,22 +33,22 @@ public interface VolunteerService extends IService<Volunteer> {
     Result getVolunteer(Long id);
 
     /**
-     * 删除申请（单个或批量）
+     * 删除申请
      */
-    Result deleteVolunteer(List<Long> ids);
+    Result deleteVolunteer(Long id);
 
     /**
-     * 批量（单个）修改状态
+     * 修改状态
      *
      * @param status
-     * @param ids
+     * @param id
      * @return
      */
-    Result updateStatus(int status, List<Long> ids);
+    Result updateStatus(int status, int id);
 
     /**
      * 查询申请列表
      */
-    Result getVolunteerPage(int page, int pageSize, String id);
+    Result getVolunteerPage(int page, int pageSize, String name);
 }
 

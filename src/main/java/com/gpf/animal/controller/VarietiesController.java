@@ -1,5 +1,6 @@
 package com.gpf.animal.controller;
 
+import com.gpf.animal.common.PageVO;
 import com.gpf.animal.common.Result;
 import com.gpf.animal.dto.RequestParams;
 import com.gpf.animal.entity.PetVarieties;
@@ -80,12 +81,13 @@ public class VarietiesController {
     /**
      * 查询宠物类型分类列表
      *
-     * @param page
-     * @param pageSize
      * @return
      */
-    @GetMapping("/page")
-    public Result varietiesPage(int page, int pageSize) {
+    @PostMapping("/page")
+    public Result varietiesPage(@RequestBody PageVO pageVO) {
+        Integer page = pageVO.getPage();
+        Integer pageSize = pageVO.getPageSize();
+        String name = pageVO.getName();
         return varietiesService.varietiesPage(page, pageSize);
     }
 
@@ -99,5 +101,15 @@ public class VarietiesController {
     public Result varietiesFilter(@RequestBody RequestParams requestParams) {
         return varietiesService.getVarietiesFilter(requestParams);
     }
+
+    /**
+     * 获取echart图数据
+     * @return
+     */
+    @GetMapping("/echart")
+    public Result getVarietiesChartsData(){
+        return varietiesService.getVarietiesChartsData();
+    }
+
 }
 

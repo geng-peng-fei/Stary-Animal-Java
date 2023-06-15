@@ -19,14 +19,11 @@
                     placeholder="请输入活动名称"
                     style="width: 250px"
                     clearable
-                    @keyup.enter.native="handleQuery"
-            >
-                <i
-                        slot="prefix"
-                        class="el-input__icon el-icon-search"
-                        style="cursor: pointer"
-                        @click="init"
-                ></i>
+                    @keyup.enter.native="handleQuery">
+                <i slot="prefix"
+                   class="el-input__icon el-icon-search"
+                   style="cursor: pointer"
+                   @click="init"></i>
             </el-input>
             <div class="tableLab">
                 <el-button
@@ -115,7 +112,7 @@
                 })
             },
             getImage(image) {
-                return `/common/download?name=${image}`
+                return `/common/download/active?name=${image}`
             },
             handleQuery() {
                 this.page = 1;

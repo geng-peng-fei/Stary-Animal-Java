@@ -14,10 +14,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * (Varieties)表服务实现类
@@ -162,6 +159,36 @@ public class VarietiesServiceImpl extends ServiceImpl<VarietiesDao, Varieties> i
         }
         //返回  数据
         return Result.ok(listHashMap);
+    }
+
+    /**
+     * 获取echart图数据
+     * @return
+     */
+    @Override
+    public Result getVarietiesChartsData() {
+        HashMap<String, List> echartData = new HashMap<>();
+        //构造条件构造器
+        LambdaQueryWrapper<Varieties> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        //                     升序 排序
+        lambdaQueryWrapper.orderByAsc(Varieties::getId);
+        //  List集合接收 查询结果
+        List<Varieties> varietiesList = list(lambdaQueryWrapper);
+        ArrayList<String> labels= new ArrayList<>();
+        ArrayList<Integer> values= new ArrayList<>();
+
+        for (Varieties varieties : varietiesList) {
+            Long id = varieties.getId();
+            LambdaQueryWrapper<PetVarieties> petVarietiesWrapper = new LambdaQueryWrapper<>();
+            petVarietiesWrapper.eq(id != null, PetVarieties::getVarietiesId, id);
+            List<PetVarieties> list = petVarietiesService.list(petVarietiesWrapper);
+
+            labels.add(varieties.getName());
+            values.add(list.size());
+        }
+        echartData.put("labels", labels);
+        echartData.put("values", values);
+        return Result.ok(echartData);
     }
 }
 

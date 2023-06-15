@@ -38,7 +38,7 @@
 <!--                <span>用 户 列 表</span>-->
 <!--            </div>-->
 <!--            <div>-->
-<!--                <div style="padding: 10px 0" v-for="admin in admins" :key="admin.adminName" @click="chatAdmin = admin.adminName" style="cursor: pointer">-->
+<!--                <div style="padding: 10px 0" v-for="admin in admins" :key="admin.adminName" @click="chatAdmin = admin.adminName">-->
 <!--                    <span >{{ admin.adminName }}</span>-->
 <!--                </div>-->
 <!--            </div>-->
@@ -161,6 +161,7 @@
 <!--                if (typeof (WebSocket) == "undefined") {-->
 <!--                    console.log("您的浏览器不支持WebSocket");-->
 <!--                } else {-->
+<!--                    // let socketUrl = "ws://localhost:8081/chat/customerService/" + adminName;-->
 <!--                    let socketUrl = "ws://localhost:8081/chat/" + adminName;-->
 <!--                    if (socket != null) {-->
 <!--                        socket.close();-->

@@ -252,13 +252,14 @@
     color: #aeb5c4;
     height: 42px;
     line-height: 42px;
+    margin-bottom: 10px;
 }
 
-.el-menu .el-menu-item {
-    padding: 0 0 0 32px !important;
-    margin: 0 34px 20px 0;
-    border-radius: 0 21px 21px 0 !important;
-}
+/*.el-menu .el-menu-item {*/
+/*    padding: 0 0 0 32px !important;*/
+/*    margin: 0 34px 20px 0;*/
+/*    border-radius: 0 21px 21px 0 !important;*/
+/*}*/
 
 .el-menu .el-menu-item:hover {
     color: #ffffff !important;
@@ -332,12 +333,7 @@
     position: relative;
     z-index: 9;
 }
-
-.el-submenu__title svg {
-    margin-right: 5px !important;
-    width: 28px !important;
-    height: 28px !important;
-}
+ß
 
 .el-menu-item {
     position: relative;

@@ -31,15 +31,7 @@ public class Adopt implements Serializable {
 
     private Integer status;
 
-    private String createTime;
+    private Long createTime;
 
-    @TableField(exist = false)
-    private String nickName;
-    @TableField(exist = false)
-    private String userPhone;
-    @TableField(exist = false)
-    private String userAddress;
-    @TableField(exist = false)
-    private String petName;
 }
 

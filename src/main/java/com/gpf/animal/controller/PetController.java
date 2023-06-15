@@ -1,7 +1,9 @@
 package com.gpf.animal.controller;
 
 
+import com.gpf.animal.common.PageVO;
 import com.gpf.animal.common.Result;
+import com.gpf.animal.common.StatusVo;
 import com.gpf.animal.dto.RequestParams;
 import com.gpf.animal.entity.Pet;
 import com.gpf.animal.service.PetService;
@@ -39,8 +41,11 @@ public class PetController {
     /**
      * 查询宠物分页
      */
-    @GetMapping("/page")
-    public Result getPetPage(Integer page, Integer pageSize, String name) {
+    @PostMapping("/page")
+    public Result getPetPage(@RequestBody PageVO pageVO) {
+        Integer page = pageVO.getPage();
+        Integer pageSize = pageVO.getPageSize();
+        String name = pageVO.getName();
         return petService.getPetPage(page, pageSize, name);
     }
 
@@ -86,12 +91,12 @@ public class PetController {
     /**
      * 修改状态
      *
-     * @param status
-     * @param id
      * @return
      */
-    @PostMapping("/status/{status}")
-    public Result updateStatus(@PathVariable int status, @RequestParam Long id) {
+    @PostMapping("/status")
+    public Result updateStatus(@RequestBody StatusVo statusVo) {
+        Integer status = statusVo.getStatus();
+        Long id = Long.valueOf(statusVo.getId());
         return petService.updateStatus(status, id);
     }
 

@@ -23,9 +23,9 @@ import java.util.UUID;
 @Slf4j
 public class CommonController {
 
-    private static final String userPath = "/Users/gengpengfei/IdeaProjects/animal/src/main/resources/backend/images/user/";
-    private static final String petPath = "/Users/gengpengfei/IdeaProjects/animal/src/main/resources/backend/images/pet/";
-    private static final String activePath = "/Users/gengpengfei/IdeaProjects/animal/src/main/resources/backend/images/active/";
+    private static final String userPath = "/Users/gengpengfei/Desktop/animal/animal/src/main/resources/backend/images/user/";
+    private static final String petPath = "/Users/gengpengfei/Desktop/animal/animal/src/main/resources/backend/images/pet/";
+    private static final String activePath = "/Users/gengpengfei/Desktop/animal/animal/src/main/resources/backend/images/active/";
     String basePath = "";
 
     /**
@@ -88,6 +88,7 @@ public class CommonController {
             //关闭资源
             outputStream.close();
             fileInputStream.close();
+            basePath = "";
         } catch (Exception e) {
             e.printStackTrace();
         }

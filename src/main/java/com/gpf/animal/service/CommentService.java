@@ -24,17 +24,18 @@ public interface CommentService extends IService<Comment> {
     /**
      * 分页查询评论列表
      *
-     * @return result
-     * @parme comment
+     * @param blogId
+     * @return
      */
-    Result commentList(Long id, int page, int pageSize, int sort);
+    Result commentList(int blogId);
 
     /**
      * 删除评论
      *
+     * @parme commentId
+     * @parme userId
      * @return result
-     * @parme comment
      */
-    Result deleteComment(List<Long> ids);
+    Result deleteComment(Long commentId, Long userId);
 }
 

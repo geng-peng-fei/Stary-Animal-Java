@@ -2,11 +2,11 @@ package com.gpf.animal.controller;
 
 import com.gpf.animal.common.Result;
 import com.gpf.animal.entity.Comment;
+import com.gpf.animal.service.BlogService;
 import com.gpf.animal.service.CommentService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 
 /**
@@ -24,6 +24,8 @@ public class CommentController {
     @Resource
     private CommentService commentService;
 
+
+
     /**
      * 新增评论
      *
@@ -38,23 +40,24 @@ public class CommentController {
     /**
      * 分页查询评论列表
      *
-     * @return result
-     * @parme comment
+     * @param blogId
+     * @return
      */
-    @GetMapping("/list/{id}")
-    public Result commentList(@PathVariable Long id, int page, int pageSize, int sort) {
-        return commentService.commentList(id, page, pageSize, sort);
+    @GetMapping("/list/{blogId}")
+    public Result commentList(@PathVariable int blogId) {
+        return commentService.commentList(blogId);
     }
 
     /**
      * 删除评论
      *
+     * @parme commentId
+     * @parme userId
      * @return result
-     * @parme comment
      */
-    @DeleteMapping("/{ids}")
-    public Result deleteComment(@PathVariable List<Long> ids) {
-        return commentService.deleteComment(ids);
+    @DeleteMapping("/{commentId}/{userId}")
+    public Result deleteComment(@PathVariable Long commentId, @PathVariable Long userId) {
+        return commentService.deleteComment(commentId, userId);
     }
 }
 

@@ -11,7 +11,9 @@ import com.gpf.animal.entity.Pet;
 import com.gpf.animal.service.ActiveService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -145,7 +147,7 @@ public class ActiveServiceImpl extends ServiceImpl<ActiveDao, Active> implements
         if (activeList.size() <= 4) {
             return Result.ok(activeList);
         } else {
-            actives = activeList.subList(0, activeList.size() - 1);
+            actives = activeList.subList(0, 5);
         }
         return Result.ok(actives);
     }
@@ -174,6 +176,40 @@ public class ActiveServiceImpl extends ServiceImpl<ActiveDao, Active> implements
         active.setMember(member);
         boolean isSuccess = updateById(active);
         return Result.ok(isSuccess);
+    }
+
+    /**
+     * echart数据
+     * @return
+     */
+    @Override
+    public Result getActiveEchartData() {
+        HashMap<String, List> echartData = new HashMap<>();
+        ArrayList<String> labels= new ArrayList<>();
+        ArrayList<Integer> values= new ArrayList<>();
+        List<Active> activeList = list();
+        int beforeStart = 0;
+        int starting = 0;
+        int endStart = 0;
+        labels.add("未开始");
+        labels.add("进行中");
+        labels.add("已结束");
+        for (Active active : activeList) {
+            Integer status = active.getStatus();
+            if (status == 0){
+                beforeStart += 1;
+            }else if (status == 1){
+                starting += 1;
+            }else if (status == 2){
+                endStart += 1;
+            }
+        }
+        values.add(beforeStart);
+        values.add(starting);
+        values.add(endStart);
+        echartData.put("labels", labels);
+        echartData.put("values", values);
+        return Result.ok(echartData);
     }
 }
 

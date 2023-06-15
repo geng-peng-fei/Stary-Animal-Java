@@ -41,6 +41,13 @@ public interface PetVarietiesService extends IService<PetVarieties> {
      */
     Result getPetVarietiesList(Long varietiesId);
 
+    /**
+     * 根据类型名称获取品种
+     * @param varieties
+     * @return
+     */
+    Result getPetVarietiesEchartData(String varieties);
+
 //    /**
 //     * 获取varieties下的petVarieties
 //     * @param requestParams

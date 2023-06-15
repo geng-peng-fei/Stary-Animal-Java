@@ -1,16 +1,14 @@
 package com.gpf.animal.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gpf.animal.common.PageVO;
 import com.gpf.animal.common.Result;
-import com.gpf.animal.entity.Adopt;
-import com.gpf.animal.entity.Volunteer;
-import com.gpf.animal.service.VolunteerService;
+import com.gpf.animal.common.StatusVo;
+import com.gpf.animal.entity.VolunteerAdopt;
+import com.gpf.animal.service.VolunteerAdoptService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
 import java.util.List;
 
 
@@ -21,28 +19,29 @@ import java.util.List;
  * @since 2022-11-10 09:14:04
  */
 @RestController
-@RequestMapping("volunteer")
+@RequestMapping("volunteerAdopt")
 public class VolunteerController {
+
     /**
      * 服务对象
      */
     @Resource
-    private VolunteerService volunteerService;
+    private VolunteerAdoptService volunteerService;
 
     /**
      * 新增申请
      */
     @PostMapping
-    public Result insertVolunteer(@RequestBody Volunteer volunteer) {
+    public Result insertVolunteer(@RequestBody VolunteerAdopt volunteer) {
         return volunteerService.insertVolunteer(volunteer);
     }
 
     /**
-     * 删除申请（单个或批量）
+     * 删除申请
      */
     @DeleteMapping
-    public Result deleteVolunteer(@RequestParam List<Long> ids) {
-        return volunteerService.deleteVolunteer(ids);
+    public Result deleteVolunteer(@RequestParam Long id) {
+        return volunteerService.deleteVolunteer(id);
     }
 
     /**
@@ -51,7 +50,7 @@ public class VolunteerController {
      * @param volunteer
      */
     @PutMapping
-    public Result updateVolunteer(@RequestBody Volunteer volunteer) {
+    public Result updateVolunteer(@RequestBody VolunteerAdopt volunteer) {
         return volunteerService.updateVolunteer(volunteer);
     }
 
@@ -67,23 +66,26 @@ public class VolunteerController {
 
 
     /**
-     * 批量（单个）修改状态
+     * 修改状态
      *
-     * @param status
-     * @param ids
      * @return
      */
-    @PostMapping("/status/{status}")
-    public Result updateStatus(@PathVariable int status, @RequestParam List<Long> ids) {
-        return volunteerService.updateStatus(status, ids);
+    @PostMapping("/status")
+    public Result updateStatus(@RequestBody StatusVo statusVo) {
+        int status = statusVo.getStatus();
+        int id = statusVo.getId();
+        return volunteerService.updateStatus(status, id);
     }
 
     /**
      * 查询申请列表
      */
-    @GetMapping("/page")
-    public Result getVolunteerPage(int page, int pageSize, String id) {
-        return volunteerService.getVolunteerPage(page, pageSize, id);
+    @PostMapping("/page")
+    public Result getVolunteerPage(@RequestBody PageVO pageVO) {
+        Integer page = pageVO.getPage();
+        Integer pageSize = pageVO.getPageSize();
+        String name = pageVO.getName();
+        return volunteerService.getVolunteerPage(page, pageSize, name);
     }
 
 }

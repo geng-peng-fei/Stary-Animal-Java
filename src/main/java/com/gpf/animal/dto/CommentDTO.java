@@ -1,10 +1,8 @@
 package com.gpf.animal.dto;
 
 import com.gpf.animal.entity.Comment;
-import com.gpf.animal.entity.SubComment;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -16,22 +14,21 @@ import java.util.List;
  */
 @Data
 public class CommentDTO extends Comment {
-    private Long id;
+
     /**
      * 用户信息
      */
-    private Long userId;
+    private Integer userId;
     private String userNickName;
     private String userPicture;
     /**
      * 评论信息
      */
-    private Long commentId;
-    private Long liked;
+    private Integer commentId;
     private String content;
-    private LocalDateTime createTime;
+    private String createTime;
     /**
      * 子评论列表
      */
-    private List<SubCommentDTO> subCommentList;
+    private List<CommentDTO> subCommentList;
 }

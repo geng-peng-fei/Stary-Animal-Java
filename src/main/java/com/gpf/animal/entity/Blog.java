@@ -1,57 +1,72 @@
 package com.gpf.animal.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.util.Date;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
- * (Blog)表实体类
+ * (Blog)实体类
  *
  * @author makejava
- * @since 2022-11-10 09:14:03
+ * @since 2023-03-16 16:48:04
  */
 @Data
 public class Blog implements Serializable {
-
-    private Long id;
-
-    private Long userId;
-
+    private static final long serialVersionUID = 681838979880245010L;
+    /**
+     * 文章id
+     */
+    @TableId(type = IdType.AUTO)
+    private Integer id;
+    /**
+     * 发布文章用户id
+     */
+    private Integer userId;
+    /**
+     * 文章标题
+     */
     private String title;
-
-    private String picture;
-
+    /**
+     * 文章内容
+     */
     private String content;
     /**
-     * 用户图标
+     * 文章浏览量
      */
-    @TableField(exist = false)
-    private String icon;
+    private Integer look;
     /**
-     * 用户昵称
+     * 文章评论量
      */
+    private Integer commentNum;
+    /**
+     * 文章发布时间
+     */
+    @JsonFormat(locale = "zh", timezone = "GMT+8")
+    private Date dataTime;
+
     @TableField(exist = false)
     private String nickName;
-    /**
-     * 是否点赞过了
-     */
+
     @TableField(exist = false)
-    private Boolean isLike;
+    private String userImg;
 
-    private Integer liked;
 
-    private Integer comment;
-
-    @TableField(value = "create_time")
-    private LocalDateTime createTime;
-
-    @TableField(value = "update_time")
-    private LocalDateTime updateTime;
-
+    @Override
+    public String toString() {
+        return "Blog{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", look=" + look +
+                ", commentNum=" + commentNum +
+                ", dataTime=" + dataTime +
+                '}';
+    }
 }
 

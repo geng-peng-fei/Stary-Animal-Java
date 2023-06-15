@@ -51,12 +51,18 @@ public interface AdoptService extends IService<Adopt> {
      * @param id
      * @return
      */
-    Result updateStatus(int status, Long id);
+    Result updateStatus(int status, int id);
 
     /**
      * 查询领养申请列表
      */
     Result getAdoptPage(int page, int pageSize);
+
+
+    /**
+     * 获取echart数据
+     */
+    Result getAdoptEchartData(String dateConditions);
 }
 
 

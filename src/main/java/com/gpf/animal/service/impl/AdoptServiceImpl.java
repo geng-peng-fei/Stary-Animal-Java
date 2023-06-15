@@ -1,24 +1,28 @@
 package com.gpf.animal.service.impl;
 
+import ch.qos.logback.core.util.CachingDateFormatter;
+import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gpf.animal.common.Result;
 import com.gpf.animal.dao.AdoptDao;
+import com.gpf.animal.dto.AdoptDTO;
 import com.gpf.animal.entity.Adopt;
 import com.gpf.animal.entity.Pet;
 import com.gpf.animal.entity.User;
 import com.gpf.animal.service.AdoptService;
 import com.gpf.animal.service.PetService;
 import com.gpf.animal.service.UserService;
-import javafx.scene.input.DataFormat;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -47,10 +51,8 @@ public class AdoptServiceImpl extends ServiceImpl<AdoptDao, Adopt> implements Ad
             Adopt newAdopt = getOne(adoptLambdaQueryWrapper);
 
             if (newAdopt == null) {
-                LocalDateTime now = LocalDateTime.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                String time = formatter.format(now);
-                adopt.setCreateTime(time);
+                long timeMillis = System.currentTimeMillis();
+                adopt.setCreateTime(timeMillis);
                 save(adopt);
                 return Result.ok("提交成功！请耐心等待审批");
             }
@@ -75,19 +77,13 @@ public class AdoptServiceImpl extends ServiceImpl<AdoptDao, Adopt> implements Ad
         LambdaQueryWrapper<Adopt> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Adopt::getUserId, id);
         List<Adopt> adoptList = list(wrapper);
-        for (Adopt adopt : adoptList) {
-            Pet pet = petService.getById(adopt.getUserId());
-            adopt.setPetName(pet.getNickName());
-            User user = userService.getById(adopt.getUserId());
-            adopt.setUserAddress(user.getAddress());
-            adopt.setUserPhone(user.getTelephone());
-            adopt.setNickName(user.getNickName());
-        }
-        return Result.ok(adoptList);
+        List<AdoptDTO> adoptDTOS = new ArrayList<>();
+        adoptDTOS = adoptCopyAdoptDTO(adoptList, adoptDTOS);
+        return Result.ok(adoptDTOS);
     }
 
     @Override
-    public Result updateStatus(int status, Long id) {
+    public Result updateStatus(int status, int id) {
         Adopt adopt = getById(id);
         adopt.setStatus(status);
         updateById(adopt);
@@ -97,35 +93,103 @@ public class AdoptServiceImpl extends ServiceImpl<AdoptDao, Adopt> implements Ad
 
     @Override
     public Result getAdoptPage(int page, int pageSize) {
-        Page<Adopt> adoptPage = new Page<>(page, pageSize);
+        Page<AdoptDTO> adoptDTOPage = new Page<>(page, pageSize);
         LambdaQueryWrapper<Adopt> wrapper = new LambdaQueryWrapper<>();
         wrapper.orderByAsc(Adopt::getId);
         List<Adopt> adoptList = list(wrapper);
-        for (Adopt adopt : adoptList) {
-            //
-            Long petId = adopt.getPetId();
-            Pet pet = petService.getById(petId);
-            String petName = pet.getNickName();
-            adopt.setPetName(petName);
-            //
-            Long userId = adopt.getUserId();
-            User user = userService.getById(userId);
-            String nickName = user.getNickName();
-            String telephone = user.getTelephone();
-            String address = user.getAddress();
-            adopt.setNickName(nickName);
-            adopt.setUserPhone(telephone);
-            adopt.setUserAddress(address);
-        }
-        List<Adopt> newList;
-        if (page * pageSize < adoptList.size()) {
-            newList = adoptList.subList((page - 1) * pageSize, page * pageSize);
+        List<AdoptDTO> adoptDTOS = new ArrayList<>();
+        adoptDTOS = adoptCopyAdoptDTO(adoptList, adoptDTOS);
+        List<AdoptDTO> newListDTO;
+        if (page * pageSize < adoptDTOS.size()) {
+            newListDTO = adoptDTOS.subList((page - 1) * pageSize, page * pageSize);
         } else {
-            newList = adoptList.subList((page - 1) * pageSize, adoptList.size());
+            newListDTO = adoptDTOS.subList((page - 1) * pageSize, adoptDTOS.size());
         }
-        adoptPage.setRecords(newList);
-        adoptPage.setTotal(adoptList.size());
-        return Result.ok(adoptPage);
+        adoptDTOPage.setRecords(newListDTO);
+        adoptDTOPage.setTotal(adoptDTOS.size());
+        System.out.println(adoptDTOPage.getRecords());
+        return Result.ok(adoptDTOPage);
     }
+
+    public List<AdoptDTO> adoptCopyAdoptDTO(List<Adopt> adoptList, List<AdoptDTO> adoptDTOS) {
+        for (Adopt adopt : adoptList) {
+            AdoptDTO adoptDTO = new AdoptDTO();
+            BeanUtils.copyProperties(adopt, adoptDTO);
+            Long createTime = adopt.getCreateTime();
+            DateTime dateTime = new DateTime(createTime);
+            adoptDTO.setCreateTime(dateTime.toString());
+            Pet pet = petService.getById(adopt.getPetId());
+            adoptDTO.setPetName(pet.getNickName());
+            User user = userService.getById(adopt.getUserId());
+            adoptDTO.setUserAddress(user.getAddress());
+            adoptDTO.setUserPhone(user.getTelephone());
+            adoptDTO.setNickName(user.getNickName());
+            adoptDTOS.add(adoptDTO);
+        }
+        return adoptDTOS;
+    }
+
+    /**
+     * 获取echart数据
+     */
+    @Override
+    public Result getAdoptEchartData(String dateConditions) {
+        HashMap<String, List> echartData = new HashMap<>();
+        ArrayList<String> labels = new ArrayList<>();
+        ArrayList<Integer> values = new ArrayList<>();
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if ("day".equals(dateConditions)) {
+            for (int i = 0; i < 7; i++) {
+                LocalDate localDate = currentDate.minusDays(i);
+                labels.add(localDate.toString());
+                LocalDateTime start = localDate.atStartOfDay();
+                LocalDateTime end = start.withHour(23).withMinute(59).withSecond(59);
+                values = getTimeNum(start, end, values);
+            }
+        } else if ("month".equals(dateConditions)) {
+            for (int i = 0; i < 4; i++) {
+                LocalDate date = currentDate.minusWeeks(i);
+                LocalDate monday = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+                LocalDate sunday = monday.plusDays(6);
+                LocalDateTime start = LocalDateTime.of(monday, LocalTime.MIDNIGHT);
+                LocalDateTime end = LocalDateTime.of(sunday, LocalTime.of(23, 59, 59));
+                values = getTimeNum(start, end, values);
+                if (!date.isBefore(currentDate.minusWeeks(4))) {
+                    String strStart = dateFormatter.format(start.toLocalDate());
+                    String strEnd = dateFormatter.format(end.toLocalDate());
+                    labels.add(strStart + " - " + strEnd);
+                }
+            }
+        } else if ("year".equals(dateConditions)) {
+            for (int i = 0; i < 12; i++) {
+                LocalDate date = currentDate.minusMonths(i);
+                LocalDate firstDayOfMonth = date.withDayOfMonth(1);
+                LocalDate lastDayOfMonth = date.withDayOfMonth(date.lengthOfMonth());
+                LocalDateTime start = LocalDateTime.of(firstDayOfMonth.minusMonths(1), LocalTime.MIDNIGHT);
+                LocalDateTime end = LocalDateTime.of(lastDayOfMonth, LocalTime.of(23, 59, 59));
+                values = getTimeNum(start, end, values);
+                if (!date.isBefore(currentDate.minusYears(1))) {
+                    String strStart = dateFormatter.format(start.toLocalDate());
+                    String strEnd = dateFormatter.format(end.toLocalDate());
+                    labels.add(strStart);
+                }
+            }
+        }
+        echartData.put("labels", labels);
+        echartData.put("values", values);
+        return Result.ok(echartData);
+    }
+
+    public ArrayList<Integer> getTimeNum(LocalDateTime start, LocalDateTime end, ArrayList<Integer> values) {
+        long startM = start.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long endM = end.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        LambdaQueryWrapper<Adopt> wrapper = new LambdaQueryWrapper<>();
+        wrapper.between(Adopt::getCreateTime, startM, endM);
+        List<Adopt> list = list(wrapper);
+        values.add(list.size());
+        return values;
+    }
+
 }
 

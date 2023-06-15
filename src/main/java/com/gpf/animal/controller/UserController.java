@@ -3,6 +3,7 @@ package com.gpf.animal.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gpf.animal.common.PageVO;
 import com.gpf.animal.common.Result;
 import com.gpf.animal.dto.LoginFormDTO;
 import com.gpf.animal.entity.User;
@@ -101,14 +102,23 @@ public class UserController {
     /**
      * 分页查询
      *
-     * @param page
-     * @param pageSize
-     * @param name
      * @return
      */
-    @GetMapping("/page")
-    public Result adminPage(int page, int pageSize, String name) {
+    @PostMapping("/page")
+    public Result adminPage(@RequestBody PageVO pageVO) {
+        Integer page = pageVO.getPage();
+        Integer pageSize = pageVO.getPageSize();
+        String name = pageVO.getName();
         return userService.userPage(page, pageSize, name);
+    }
+
+    /**
+     * 用户echart数据
+     * @return
+     */
+    @GetMapping("/echart")
+    public Result getUserEchartData(){
+        return userService.getUserEchartData();
     }
 }
 

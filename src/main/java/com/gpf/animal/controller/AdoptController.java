@@ -1,6 +1,8 @@
 package com.gpf.animal.controller;
 
+import com.gpf.animal.common.PageVO;
 import com.gpf.animal.common.Result;
+import com.gpf.animal.common.StatusVo;
 import com.gpf.animal.entity.Adopt;
 import com.gpf.animal.service.AdoptService;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +37,8 @@ public class AdoptController {
     /**
      * 删除领养申请
      */
-    @DeleteMapping
-    public Result deleteAdopt(@RequestParam Long id) {
+    @DeleteMapping("/{id}")
+    public Result deleteAdopt(@PathVariable Long id) {
         return adoptService.deleteAdopt(id);
     }
 
@@ -64,21 +66,32 @@ public class AdoptController {
     /**
      * 修改状态
      *
-     * @param status
-     * @param id
      * @return
      */
-    @PostMapping("/status/{status}")
-    public Result updateStatus(@PathVariable int status, @RequestParam Long id) {
+    @PostMapping("/status")
+    public Result updateStatus(@RequestBody StatusVo statusVo) {
+        int status = statusVo.getStatus();
+        int id = statusVo.getId();
         return adoptService.updateStatus(status, id);
     }
 
     /**
      * 查询领养申请列表
      */
-    @GetMapping("/page")
-    public Result getAdoptPage(int page, int pageSize) {
+    @PostMapping("/page")
+    public Result getAdoptPage(@RequestBody PageVO pageVO) {
+        Integer page = pageVO.getPage();
+        Integer pageSize = pageVO.getPageSize();
+        String name = pageVO.getName();
         return adoptService.getAdoptPage(page, pageSize);
+    }
+
+    /**
+     * 获取echart数据
+     */
+    @GetMapping("/echart/{dateConditions}")
+    public Result getAdoptEchartData(@PathVariable String dateConditions){
+        return adoptService.getAdoptEchartData(dateConditions);
     }
 }
 

@@ -69,5 +69,12 @@ public interface VarietiesService extends IService<Varieties> {
      * @return
      */
     Result getVarietiesFilter(RequestParams requestParams);
+
+
+    /**
+     * 获取echart图数据
+     * @return
+     */
+    Result getVarietiesChartsData();
 }
 

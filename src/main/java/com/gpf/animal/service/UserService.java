@@ -78,5 +78,11 @@ public interface UserService extends IService<User> {
      * @return
      */
     Result getUserById(Long id);
+
+    /**
+     * 用户echart数据
+     * @return
+     */
+    Result getUserEchartData();
 }
 

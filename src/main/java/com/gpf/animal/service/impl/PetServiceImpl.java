@@ -37,7 +37,11 @@ public class PetServiceImpl extends ServiceImpl<PetDao, Pet> implements PetServi
     @Resource
     private VarietiesService varietiesService;
 
-
+    /**
+     * 获取宠物列表
+     * @param requestParams
+     * @return
+     */
     @Override
     public Result getPetList(RequestParams requestParams) {
         Integer page = requestParams.getPage();
@@ -155,7 +159,7 @@ public class PetServiceImpl extends ServiceImpl<PetDao, Pet> implements PetServi
         if (petList.size() <= 4) {
             return Result.ok(petList);
         }
-        List<Pet> pets = petList.subList(0, petList.size() - 1);
+        List<Pet> pets = petList.subList(0, 5);
         return Result.ok(pets);
     }
 

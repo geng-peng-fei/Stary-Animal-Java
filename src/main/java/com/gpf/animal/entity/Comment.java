@@ -1,43 +1,69 @@
 package com.gpf.animal.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
- * (Comment)表实体类
+ * (Comment)实体类
  *
  * @author makejava
- * @since 2022-11-10 09:14:03
+ * @since 2023-04-05 19:15:46
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Comment implements Serializable {
+    /**
+     * 评论id
+     */
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
-    @TableField(value = "comment_id")
-    private Long commentId;
+    private Integer id;
+    /**
+     * 文章id
+     */
     @TableField(value = "blog_id")
-    private Long blogId;
-    @TableField(value = "comment_user_id")
-    private Long commentUserId;
-    @TableField(value = "commented_user_id")
-    private Long commentedUserId;
-    @TableField(value = "parent_id")
-    private Long parentId;
+    private Integer blogId;
+    /**
+     * 内容
+     */
     private String content;
-    private Long liked;
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime;
+    /**
+     * 用户名称
+     */
+    @TableField(value = "user_name")
+    private String userName;
+    /**
+     * 用户id
+     */
+    @TableField(value = "user_id")
+    private Integer userId;
+    /**
+     * 父级评论id
+     */
+    private Integer pid;
+    /**
+     * 回复对象
+     */
+    private String target;
+    /**
+     * 回复对象Id
+     */
+    @TableField(value = "target_id")
+    private Integer targetId;
+    /**
+     * 创建时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @TableField(value = "create_time")
+    private String createTime;
 
 }
 

@@ -12,18 +12,53 @@ import com.gpf.animal.entity.Blog;
  */
 public interface BlogService extends IService<Blog> {
 
-    Result queryHotBlog(Integer current);
+    /**
+     * 发布文章
+     *
+     * @param blog
+     * @return
+     */
+    Result saveBlog(Blog blog);
 
+    /**
+     * 根据id查询文章
+     *
+     * @param id
+     * @return
+     */
+    Result deleteBlogById(Long id);
+
+    /**
+     * 根据id删除文章
+     *
+     * @param id
+     * @return
+     */
     Result queryBlogById(Long id);
 
-    Result likeBlog(Long id);
-
-    Result queryBlogLikes(Long id);
-
+    /**
+     * 查询用户的所有文章
+     *
+     * @param id
+     * @param current
+     * @return
+     */
     Result queryBlogByUserId(Long id, Integer current);
 
-    Result saveblog(Blog blog);
 
-    Result queryBlogOfFollow(Long max, Integer offset);
+    /**
+     * 查询所有文章
+     *
+     * @return
+     */
+    Result queryBlog(int page, int pageSize);
+
+    /**
+     * 根据博客id添加浏览量
+     * @param blogId
+     * @param userId
+     * @return
+     */
+    Result addLookNums(Long blogId, Long userId);
 }
 

@@ -22,7 +22,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -178,5 +180,73 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         }
         return Result.ok(user);
     }
+
+    /**
+     * 用户echart数据
+     * @return
+     */
+    @Override
+    public Result getUserEchartData() {
+        HashMap<String, List> echartData = new HashMap<>();
+        ArrayList<String> labels= new ArrayList<>();
+        ArrayList<Integer> values= new ArrayList<>();
+        List<User> userList = list();
+        int manSum = 0;
+        int womanSum = 0;
+        for (User user : userList) {
+            if (user.getSex() == 1){
+                manSum += 1;
+            }else if (user.getSex() == 0){
+                womanSum += 1;
+            }
+        }
+        labels.add("男");
+        labels.add("女");
+        values.add(manSum);
+        values.add(womanSum);
+        echartData.put("labels", labels);
+        echartData.put("values", values);
+        return Result.ok(echartData);
+    }
+/**
+     * //  对用户的关键信息打码
+     *             String telephone = user.getTelephone();
+     *             user.setTelephone(telephone.replaceAll("(\\w{3})\\w*(\\w{4})", "$1****$2"));
+     *             String name = user.getName();
+     *             if (name.length() == 2) {
+     *                 user.setName(name.substring(0, 1) + "*");
+     *             } else {
+     *                 StringBuffer middle = new StringBuffer();
+     *                 for (int i = 0; i < name.substring(1, name.length() - 1).length(); i++) {
+     *                     middle.append("*");
+     *                 }
+     *                 user.setName(name.substring(0, 1) + middle + name.substring(name.length() - 1));
+     *             }
+     *
+     *             String idCard = user.getIdCard();
+     *             if (StringUtils.isNotEmpty(idCard)) {
+     *                 if (idCard.length() == 15) {
+     *                     user.setIdCard(idCard.replaceAll("(\\w{6})\\w*(\\w{3})", "$1******$2"));
+     *                 }
+     *                 if (idCard.length() == 18) {
+     *                     user.setIdCard(idCard.replaceAll("(\\w{6})\\w*(\\w{3})", "$1*********$2"));
+     *                 }
+     *             }
+     *
+     *             String address = user.getAddress();
+     *             if (StringUtils.isNotEmpty(address)) {
+     *                 int length = address.length();
+     *                 int indes = address.indexOf("区");
+     *                 if (indes == -1) {
+     *                     indes = address.indexOf("市");
+     *                 }
+     *                 address = address.substring(0, indes + 1);
+     *                 StringBuffer middle = new StringBuffer();
+     *                 for (int i = 0; i < length - indes; i++) {
+     *                     middle.append("*");
+     *                 }
+     *                 user.setAddress(address + middle);
+     *             }
+     */
 }
 

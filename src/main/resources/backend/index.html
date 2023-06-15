@@ -31,7 +31,6 @@
                 <img src="images/login/login-logo.jpg" alt="" style="width: 150px; height: 100px"/>
                 <p style="color: red; margin: 20px 0 0 0; font-size: 20px">Stray Animal</p>
             </div>
-
             <el-scrollbar wrap-class="scrollbar-wrapper">
                 <el-menu :default-active="defAct" :unique-opened="false" :collapse-transition="false"
                          background-color="#343744" text-color="#bfcbd9" active-text-color="#f4f4f5">
@@ -93,10 +92,6 @@
                 menuActived: '1',
                 admin: {},
                 menuList: [
-                    // {
-                    //     id: '1',
-                    //     name: '常用业务',
-                    //     children: [
                     {
                         id: '2',
                         name: '管理员管理',
@@ -129,10 +124,11 @@
                         id: '9',
                         name: '聊天',
                         url: 'page/chat/index.html',
-                    },
-
-                    //     ]
-                    // },
+                    },{
+                        id: '10',
+                        name: '客服服务',
+                        url: 'page/chat/customerService.html',
+                    }
                 ],
                 iframeUrl: 'page/admin/list.html',
                 headTitle: '管理员管理',

@@ -80,5 +80,11 @@ public interface ActiveService extends IService<Active> {
      * @return
      */
     Result joinActive(int activeId, int userId);
+
+    /**
+     * echart数据
+     * @return
+     */
+    Result getActiveEchartData();
 }
 

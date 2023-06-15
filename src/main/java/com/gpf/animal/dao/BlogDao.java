@@ -2,7 +2,6 @@ package com.gpf.animal.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.gpf.animal.entity.Blog;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * (Blog)表数据库访问层

@@ -10,6 +10,7 @@ import com.gpf.animal.service.AdminService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
@@ -21,6 +22,9 @@ import java.util.Objects;
  */
 @Service("adminService")
 public class AdminServiceImpl extends ServiceImpl<AdminDao, Admin> implements AdminService {
+
+    @Resource
+    private AdminService adminService;
     /**
      * 管理员登录
      *
@@ -86,7 +90,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, Admin> implements Ad
         //                模糊查询     name不为空          方法引用 对象 ：：实例方法  值
         wrapper.like(StringUtils.isNotEmpty(name), Admin::getName, name);
         //                   降序排列    方法引用 对象 ：：实例方法
-        wrapper.orderByDesc(Admin::getId);
+        wrapper.orderByAsc(Admin::getId);
         //调page方法
         page(adminPage, wrapper);
         //返回数据
@@ -126,8 +130,13 @@ public class AdminServiceImpl extends ServiceImpl<AdminDao, Admin> implements Ad
      */
     @Override
     public Result updateAdmin(Admin admin) {
-        updateById(admin);
-        return Result.ok("更新成功");
+        boolean success = updateById(admin);
+        System.out.println(success);
+        if (success == true) {
+            return Result.ok("更新成功");
+        } else {
+            return Result.fail("更新失败");
+        }
     }
 
 }
